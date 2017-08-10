@@ -1,15 +1,13 @@
 <?php
-
-/* CryptoBot for Bittrex */
-
+/* https://github.com/bibz0r/cryptoBot */
 
 require __DIR__.'/bittrex/Client.php';
 
-$API_key = 'YOUR_API_KEY';
-$API_secret = 'YOUR_API_SECRET';
+$API_key = 'YOUR_API_KEY';  // YOUR_API_KEY OVBIOUSLY NEEDS TO BE REPLACED
+$API_secret = 'YOUR_API_SECRET'; // YOUR_API_SECRET NEEDS TO BE REPLACED ALSO, otherwise the bot won't work since it can't access your account!
 
 $tradingMarket = 'BTC-NEO';
-$tradingCurrency = 'NEO';
+$tradingCurrency = substr($tradingMarket, strpos($tradingMarket, "-") + 1);
 
 $API_Client = new Client ($API_key, $API_secret);
 $API_Results =  $API_Client->getTicker ($tradingMarket);
@@ -27,9 +25,9 @@ $percentChange_sell = (1 - $oldPrice_buy / $priceNow) * 100;
 $priceChange = number_format($percentChange_sell, 2);
 
 
+/* Checking if the last ACTION in getOrderHistory was to BUY. If it was, then we check if the price increased and we made some profit, so we can sell */
 if($getOrderHistory[0]['OrderType'] == 'LIMIT_BUY'){
-	echo("Last action was to buy ");
-	echo("(bought ". number_format($getOrderHistory[0]['Quantity'],0,'.','')." $tradingCurrency for ".  number_format($getOrderHistory[0]['PricePerUnit'],8,'.','')." but the price is now at $priceNow) \n");
+	echo("Last action was to buy (bought ". number_format($getOrderHistory[0]['Quantity'],0,'.','')." $tradingCurrency for ".  number_format($getOrderHistory[0]['PricePerUnit'],8,'.','')." but the price is now at $priceNow) \n");
 	shell_exec("logger \"cryptobot: Last action was to buy at ".number_format($getOrderHistory[0]['PricePerUnit'],8,'.','').", price is now at $priceNow, thats a change of $priceChange!\"");
 	if($priceChange > '10') {
         	echo("Since I've bought, the price increased for $priceChange! (I bought at $oldPrice_buy and the price is now $priceNow) \n");
@@ -52,8 +50,8 @@ if($getOrderHistory[0]['OrderType'] == 'LIMIT_BUY'){
                                 $result_cancel = $API_Client->cancel($getOpenOrders[0]->OrderUuid);
                         }
 
-}
-}
+		}
+	}
 }
 
 
@@ -120,10 +118,4 @@ $matches[] = $key;
 return $matches; 
 } 
 
-
-//$limitBuy = array_search('LIMIT_BUY', $getOrderHistory);
-
-
-//echo($getOrderHistory[$limitBuy]->TimeStamp);	
-
-
+?>
