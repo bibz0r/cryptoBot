@@ -15,6 +15,9 @@ $API_Results =  $API_Client->getTicker ($tradingMarket);
 $sell_percentage = '10'; // e.g sell after 10% price increase
 $buy_percentage = '-10'; // e.g sell after 10% price fall
 
+
+/* STOP EDITING AFTER THIS LINE IF YOU DON'T KNOW WHAT YOU'RE DOING! */
+
 $get_object = $API_Client->getOrderHistory ($tradingMarket);
 $getOrderHistory =  json_decode(json_encode($get_object),true);
 $get_keys_buy = findKeys($getOrderHistory,'OrderType','==','LIMIT_BUY');
@@ -103,13 +106,6 @@ if($getOrderHistory[0]['OrderType'] == 'LIMIT_SELL'){
 		}
 	}
 }
-
-
-
-
-
-
-
 
 function findKeys($array,$field,$condition,$value) { 
 foreach ($array as $key=>$info) { 
