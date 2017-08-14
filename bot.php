@@ -12,6 +12,8 @@ $tradingCurrency = substr($tradingMarket, strpos($tradingMarket, "-") + 1);
 $API_Client = new Client ($API_key, $API_secret);
 $API_Results =  $API_Client->getTicker ($tradingMarket);
 
+$sell_percentage = '10'; // e.g sell after 10% price increase
+$buy_percentage = '-10'; // e.g sell after 10% price fall
 
 $get_object = $API_Client->getOrderHistory ($tradingMarket);
 $getOrderHistory =  json_decode(json_encode($get_object),true);
@@ -29,7 +31,7 @@ $priceChange = number_format($percentChange_sell, 2);
 if($getOrderHistory[0]['OrderType'] == 'LIMIT_BUY'){
 	echo("Last action was to buy (bought ". number_format($getOrderHistory[0]['Quantity'],0,'.','')." $tradingCurrency for ".  number_format($getOrderHistory[0]['PricePerUnit'],8,'.','')." but the price is now at $priceNow) \n");
 	shell_exec("logger \"cryptobot: Last action was to buy at ".number_format($getOrderHistory[0]['PricePerUnit'],8,'.','').", price is now at $priceNow, thats a change of $priceChange!\"");
-	if($priceChange > '10') {
+	if($priceChange > $sell_percentage) {
         	echo("Since I've bought, the price increased for $priceChange! (I bought at $oldPrice_buy and the price is now $priceNow) \n");
 		echo("I will try to sell now, since we've made profit \n");
 		$getOpenOrders = $API_Client->getOpenOrders($tradingMarket);
@@ -73,7 +75,7 @@ if($getOrderHistory[0]['OrderType'] == 'LIMIT_SELL'){
 	shell_exec("logger \"cryptobot: Last action was to sell at ".number_format($getOrderHistory[0]['PricePerUnit'],8,'.','').", price is now at $priceNow, thats a change of $priceChange_sell!\"");
 
 	echo("Waiting for price to fall...\n");
-	if($priceChange < '-2'){
+	if($priceChange < $buy_percentage){
 		echo("Since I've sold, the price fell for $percentChange_sell (sold at $oldPrice_sell, price is now: $priceNow)\n\n");
 		echo("Going to buy in now! \n");
 		$getOpenOrders = $API_Client->getOpenOrders($tradingMarket);
