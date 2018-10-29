@@ -26,6 +26,7 @@ $last_buy_key = $get_keys_buy[0];
 
 $oldPrice_buy = $getOrderHistory[$last_buy_key]['PricePerUnit'];
 $priceNow = $API_Results->Ask;
+$priceNow = number_format((float)$API_Results->Bid,8,'.','');
 $percentChange_sell = (1 - $oldPrice_buy / $priceNow) * 100;
 $priceChange = number_format($percentChange_sell, 2);
 
@@ -71,7 +72,7 @@ if($getOrderHistory[0]['OrderType'] == 'LIMIT_SELL'){
 
 
 	$oldPrice_sell = $getOrderHistory[$last_sell_key]['PricePerUnit'];
-	$priceNow = $API_Results->Ask;
+	$priceNow = number_format((float)$API_Results->Ask,8,'.','');
 	$percentChange_sell = (1 - $oldPrice_sell / $priceNow) * 100;
 	$priceChange_sell = number_format($percentChange_sell, 2);
 
