@@ -26,6 +26,7 @@ $last_buy_key = $get_keys_buy[0];
 
 $oldPrice_buy = $getOrderHistory[$last_buy_key]['PricePerUnit'];
 $priceNow = $API_Results->Ask;
+$priceNow = number_format((float)$API_Results->Bid,8,'.','');
 $percentChange_sell = (1 - $oldPrice_buy / $priceNow) * 100;
 $priceChange = number_format($percentChange_sell, 2);
 
@@ -71,7 +72,7 @@ if($getOrderHistory[0]['OrderType'] == 'LIMIT_SELL'){
 
 
 	$oldPrice_sell = $getOrderHistory[$last_sell_key]['PricePerUnit'];
-	$priceNow = $API_Results->Ask;
+	$priceNow = number_format((float)$API_Results->Ask,8,'.','');
 	$percentChange_sell = (1 - $oldPrice_sell / $priceNow) * 100;
 	$priceChange_sell = number_format($percentChange_sell, 2);
 
@@ -86,7 +87,7 @@ if($getOrderHistory[0]['OrderType'] == 'LIMIT_SELL'){
 		        echo("No open orders, ready to set a buy order! \n");
 			$getbalance=json_decode(json_encode($API_Client->getbalance('BTC')),true);
 			echo("I have ".$getbalance['Available']." BTC to spend \n");
-			$API_ClientuyAmount = ($priceNow / $getbalance['Available']);
+			$API_ClientuyAmount = ($getbalance['Available'] / $priceNow);
 			echo("I can buy $API_ClientuyAmount $tradingCurrency for this \n");
 			$setBuyOrder = json_decode(json_encode($API_Client->buyLimit($tradingMarket, $API_ClientuyAmount, $priceNow)));
 			if(!(empty($setBuyOrder->uuid))){
