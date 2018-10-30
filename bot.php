@@ -24,7 +24,7 @@ $getOrderHistory =  json_decode(json_encode($get_object),true);
 $get_keys_buy = findKeys($getOrderHistory,'OrderType','==','LIMIT_BUY');
 $last_buy_key = $get_keys_buy[0];
 
-$oldPrice_buy = $getOrderHistory[$last_buy_key]['PricePerUnit'];
+$oldPrice_buy = number_format((float)$getOrderHistory[$last_buy_key]['PricePerUnit'],8);
 $priceNow = number_format((float)$API_Results->Bid,8);
 $percentChange_sell = (1 - $oldPrice_buy / $priceNow) * 100;
 $priceChange = number_format($percentChange_sell, 2);
@@ -33,7 +33,7 @@ if($verbose){
 	echo("\$oldPrice_buy: ". $oldPrice_buy ."<br>");
 	echo("\$priceNow: ". $priceNow ."<br>");
 	echo("\$priceChange: ". $priceChange ."<br>");
-	echo("Price before sell: ". number_format((float)$oldPrice_buy * ($sell_percentage / 100 + 1),8)."<br>");
+	echo("Price before it sells: ". number_format((float)$oldPrice_buy * ($sell_percentage / 100 + 1),8)."<br>");
 }
 
 /* Checking if the last ACTION in getOrderHistory was to BUY. If it was, then we check if the price increased and we made some profit, so we can sell */
