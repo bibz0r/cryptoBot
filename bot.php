@@ -33,7 +33,7 @@ if($verbose){
 	echo("\$oldPrice_buy: ". $oldPrice_buy ."<br>");
 	echo("\$priceNow: ". $priceNow ."<br>");
 	echo("\$priceChange: ". $priceChange ."<br>");
-	echo("Price before sell: ". number_format((float)0.00003641 * ($sell_percentage / 100 + 1),8)."<br>");
+	echo("Price before sell: ". number_format((float)$oldPrice_buy * ($sell_percentage / 100 + 1),8)."<br>");
 }
 
 /* Checking if the last ACTION in getOrderHistory was to BUY. If it was, then we check if the price increased and we made some profit, so we can sell */
